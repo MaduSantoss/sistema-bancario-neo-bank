@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Listar Contas - NeoBank</title>
+    <style>
+        :root {
+            --bg-dark: #121212;
+            --bg-container-solid: #1e1e1e;
+            --glass-bg: rgba(30, 30, 30, 0.6);
+            --text-primary: #f4f4f4;
+            --text-secondary: #aaaaaa;
+            --accent-pink: #D81B60;
+            --accent-pink-hover: #B3004A;
+            --border-color: rgba(255, 255, 255, 0.1);
+            --alert-success-bg: rgba(49, 15, 30, 0.8);
+            --alert-success-text: #f5b6d1;
+            --alert-danger-bg: rgba(74, 28, 32, 0.8);
+            --alert-danger-text: #f5c6cb;
+            --font-stack: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        @keyframes animatedGradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        @keyframes slideUpFadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        body {
+            font-family: var(--font-stack);
+            background-color: var(--bg-dark);
+            color: var(--text-primary);
+            margin: 0;
+            padding: 2rem;
+            box-sizing: border-box;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            z-index: -1;
+            background: linear-gradient(-45deg, var(--bg-dark) 40%, #3d0f23, var(--bg-dark) 60%);
+            background-size: 400% 400%;
+            animation: animatedGradient 15s ease infinite;
+            filter: blur(30px);
+        }
+
+
+        .split-page-container {
+            width: 100%;
+            max-width: 1000px;
+            min-height: 600px;
+            display: flex;
+            background: var(--bg-container-solid);
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+            animation: slideUpFadeIn 0.8s ease-out;
+        }
+        .branding-side {
+            flex-basis: 50%;
+            padding: 3rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+        .form-side {
+            flex-basis: 50%;
+            padding: 3rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            background: var(--glass-bg);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border-left: 1px solid var(--border-color);
+        }
+        .logo-container-split {
+            text-align: center;
+            margin-bottom: 2rem;
+            opacity: 0;
+            animation: slideUpFadeIn 0.7s ease-out 0.3s forwards;
+        }
+        .logo-container-split svg {
+            width: 70px; height: 70px; margin-bottom: 1rem;
+        }
+        .logo-container-split h1 {
+            font-size: 3rem; margin: 0; font-weight: 700;
+        }
+        .logo-container-split p.slogan {
+            font-size: 1.25rem; color: var(--text-secondary); margin-top: 0.5rem;
+        }
+        .form-side h2 {
+            text-align: left;
+            font-size: 1.75rem;
+            font-weight: 600;
+            margin-bottom: 2rem;
+            opacity: 0;
+            animation: slideUpFadeIn 0.7s ease-out 0.5s forwards;
+        }
+        .form-side form {
+            opacity: 0;
+            animation: slideUpFadeIn 0.7s ease-out 0.7s forwards;
+        }
+
+
+        .header {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 100;
+            background: var(--glass-bg);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border-bottom: 1px solid var(--border-color);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+            
+            animation: slideUpFadeIn 0.5s ease-out;
+        }
+        .header-content {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .header-logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin: 0;
+        }
+        .header-user {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+        .header-user span {
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+        .header-user a {
+            background-color: #8B0000;
+            color: white;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: background-color 0.2s;
+        }
+        .header-user a:hover {
+            background-color: #B22222;
+            text-decoration: none;
+        }
+        
+        
+        body.header-padding {
+            padding-top: 100px;
+            display: block;
+        }
+        
+        
+        .container {
+             width: 100%; 
+             max-width: 900px; 
+             padding: 2.5rem;
+             box-sizing: border-box;
+             margin: 2rem auto;
+             background: var(--glass-bg);
+             backdrop-filter: blur(15px);
+             -webkit-backdrop-filter: blur(15px);
+             
+             border-radius: 12px;
+             border: 1px solid var(--border-color);
+             box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+             
+             /* Animação */
+             animation: slideUpFadeIn 0.8s ease-out 0.2s backwards;
+        }
+        .container.form-transacao {
+            max-width: 600px;
+        }
+
+
+        h1, h2, h3 { color: var(--text-primary); }
+        a { color: var(--accent-pink); text-decoration: none; }
+        a:hover { color: var(--accent-pink-hover); }
+        
+
+        .form-group { margin-bottom: 1.5rem; }
+        .form-group label {
+            display: block; margin-bottom: 0.5rem;
+            font-weight: 500; color: var(--text-secondary);
+        }
+        .form-group input[type="text"],
+        .form-group input[type="password"],
+        .form-group input[type="date"],
+        .form-group input[type="number"] {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            box-sizing: border-box;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            background: rgba(18, 18, 18, 0.7);
+            color: var(--text-primary);
+            font-size: 1rem;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--accent-pink);
+            box-shadow: 0 0 0 3px rgba(216, 27, 96, 0.3);
+        }
+
+
+        .btn, .btn-submit, .acao-btn {
+            display: inline-block; width: 100%;
+            padding: 0.85rem 1.5rem;
+            font-size: 1.1rem; font-weight: 600;
+            text-align: center; text-decoration: none;
+            color: #ffffff;
+            background-color: var(--accent-pink);
+            border: none; border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.2s, transform 0.1s;
+            box-sizing: border-box;
+        }
+        .btn:hover, .btn-submit:hover, .acao-btn:hover {
+            background-color: var(--accent-pink-hover);
+            transform: translateY(-2px);
+            text-decoration: none; color: #ffffff;
+        }
+        .btn-voltar {
+            width: auto; background-color: #555;
+            margin-bottom: 1.5rem; font-size: 0.9rem;
+        }
+        .btn-voltar:hover { background-color: #777; }
+        
+
+        .btn-submit.btn-deposito { background-color: #28a745; }
+        .btn-submit.btn-deposito:hover { background-color: #218838; }
+        .btn-submit.btn-saque { background-color: #f0ad4e; }
+        .btn-submit.btn-saque:hover { background-color: #ec9b3b; }
+        
+
+        .alert {
+            padding: 1rem; margin-bottom: 1.5rem;
+            border-radius: 8px; font-weight: 500;
+            border: 1px solid transparent;
+            backdrop-filter: blur(5px);
+        }
+        .alert-danger {
+            color: var(--alert-danger-text);
+            background-color: var(--alert-danger-bg);
+            border-color: #8b3a44;
+        }
+        .alert-success {
+            color: var(--alert-success-text);
+            background-color: var(--alert-success-bg);
+            border-color: #8a3a5f;
+        }
+        .links { 
+            margin-top: 1.5rem; text-align: left;
+            opacity: 0;
+            animation: slideUpFadeIn 0.7s ease-out 0.9s forwards;
+        }
+
+
+        
+        .saldo-box {
+            background: rgba(18, 18, 18, 0.5);
+            border: 1px solid var(--border-color);
+            padding: 2rem; border-radius: 12px; margin-bottom: 2.5rem;
+        }
+        .saldo-box h2 {
+            margin-top: 0; color: var(--text-secondary); font-size: 1.2rem;
+        }
+        .saldo-box p {
+            font-size: 3rem; font-weight: 700; margin: 0;
+            color: var(--text-primary);
+        }
+        .saldo-box .conta-info {
+            font-size: 1rem; color: var(--text-secondary);
+            margin-top: 0.5rem; display: block;
+        }
+        .acoes {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+        }
+        .acao-btn { padding: 2rem; font-size: 1.25rem; }
+        .admin-menu {
+            margin-top: 2rem; border-top: 1px solid var(--border-color);
+            padding-top: 2rem;
+        }
+        .admin-menu .acao-btn { background-color: #006064; }
+        .admin-menu .acao-btn:hover { background-color: #00838F; }
+        
+
+        .data-table, .extrato-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 2rem;
+            overflow: hidden;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            background: transparent;
+        }
+        .data-table th, .extrato-table th {
+            background-color: rgba(18, 18, 18, 0.7);
+            padding: 1rem; text-align: left;
+            font-weight: 600;
+            border-bottom: 2px solid var(--accent-pink);
+        }
+        .data-table td, .extrato-table td {
+            padding: 1rem; text-align: left;
+            border-bottom: 1px solid var(--border-color);
+            background-color: rgba(30, 30, 30, 0.3);
+        }
+        .data-table tr:last-child td,
+        .extrato-table tr:last-child td {
+            border-bottom: none;
+        }
+        .valor-positivo { color: #4CAF50; font-weight: bold; }
+        .valor-negativo { color: #F44336; font-weight: bold; }
+        .saldo-final {
+            font-size: 1.25rem; font-weight: bold;
+            text-align: right; margin-top: 1.5rem;
+        }
+        .saldo-atual {
+            font-size: 1.1rem; margin-bottom: 1.5rem; padding: 1rem;
+            background-color: rgba(18, 18, 18, 0.5);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+        }
+        .saldo-atual strong { color: var(--accent-pink); font-size: 1.2rem; }
+
+
+        @media (max-width: 800px) {
+            body { padding: 1rem; }
+            
+
+            .split-page-container {
+                flex-direction: column;
+                min-height: auto;
+                max-width: 450px;
+                background: transparent;
+                border: none; box-shadow: none;
+            }
+            .branding-side {
+                 background: transparent;
+                 padding: 2rem 1rem 0 1rem;
+            }
+            .form-side {
+                background: var(--bg-container-solid);
+                backdrop-filter: none;
+                padding: 2rem;
+                border-left: none;
+                border-radius: 12px;
+            }
+            .logo-container-split h1 { font-size: 2.5rem; }
+            
+
+            body.header-padding { padding: 1rem; padding-top: 90px; }
+            .header-content { padding: 0.75rem 1rem; }
+            .header-logo { font-size: 1.25rem; }
+            .header-user span { display: none; }
+            .container { padding: 1.5rem; margin-top: 1rem; }
+            .acoes { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body class="header-padding">
+
+    <header class="header">
+        <div class="header-content">
+            <h1 class="header-logo">Neo<span style="color:var(--accent-pink);">Bank</span></h1>
+            <div class="header-user">
+                <span>Painel Admin</span>
+                <a href="/logout">Sair</a>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+
+        <a href="/dashboard" class="btn-voltar">&larr; Voltar ao Dashboard</a>
+
+        <h2>Todas as Contas do Banco</h2>
+
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Agência</th>
+                    <th>Conta</th>
+                    <th>Titular</th>
+                    <th>Saldo (R$)</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for conta in contas %}
+                <tr>
+                    <td>{{ conta.agencia }}</td>
+                    <td>{{ conta.conta }}</td>
+                    <td>{{ conta.titular }}</td>
+                    <td>R$ {{ "%.2f"|format(conta.saldo) }}</td>
+                </tr>
+                {% endfor %}
+
+                {% if not contas %}
+                <tr>
+                    <td colspan="4" style="text-align: center; color: var(--text-secondary);">Nenhuma conta encontrada.</td>
+                </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+
+</body>
+</html>

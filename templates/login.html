@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - NeoBank</title>
+    <style>
+        :root {
+            --bg-dark: #121212;
+            --bg-container: #1e1e1e;
+            --text-primary: #f4f4f4;
+            --text-secondary: #aaaaaa;
+            --accent-pink: #D81B60;
+            --accent-pink-hover: #B3004A;
+            --border-color: rgba(255, 255, 255, 0.1);
+            --alert-success-bg: #310f1e;
+            --alert-success-text: #f5b6d1;
+            --alert-danger-bg: #4a1c20;
+            --alert-danger-text: #f5c6cb;
+            --font-stack: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        @keyframes animatedGradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        @keyframes slideUpFadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        body {
+            font-family: var(--font-stack);
+            background-color: var(--bg-dark);
+            color: var(--text-primary);
+            margin: 0;
+            padding: 2rem;
+            box-sizing: border-box;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            position: relative;
+            overflow: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            z-index: -1;
+            background: linear-gradient(-45deg, var(--bg-dark) 40%, #3d0f23, var(--bg-dark) 60%);
+            background-size: 400% 400%;
+            animation: animatedGradient 15s ease infinite;
+            filter: blur(30px);
+        }
+
+        .split-page-container {
+            width: 100%;
+            max-width: 1000px;
+            min-height: 600px;
+            display: flex;
+            background: var(--bg-container);
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+            animation: slideUpFadeIn 0.8s ease-out;
+        }
+
+        .branding-side { flex-basis: 50%; padding: 3rem; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
+
+        .form-side {
+            flex-basis: 50%; padding: 3rem; display: flex; flex-direction: column; justify-content: center;
+            background: rgba(30, 30, 30, 0.6); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); border-left: 1px solid var(--border-color);
+        }
+
+        .logo-container-split { text-align: center; margin-bottom: 2rem; opacity: 0; animation: slideUpFadeIn 0.7s ease-out 0.3s forwards; animation-fill-mode: forwards; }
+        .logo-container-split svg { width: 70px; height: 70px; margin-bottom: 1rem; }
+        .logo-container-split h1 { font-size: 3rem; margin: 0; color: var(--text-primary); font-weight: 700; }
+        .logo-container-split p.slogan { font-size: 1.25rem; color: var(--text-secondary); margin-top: 0.5rem; }
+
+        .form-side h2 { text-align: left; font-size: 1.75rem; color: var(--text-primary); font-weight: 600; margin-bottom: 2rem; opacity: 0; animation: slideUpFadeIn 0.7s ease-out 0.5s forwards; }
+
+        .form-group { margin-bottom: 1.5rem; }
+        .form-group label { display: block; margin-bottom: 0.5rem; font-weight: 500; color: var(--text-secondary); }
+        .form-group input[type="text"], .form-group input[type="password"] {
+            width: 100%; padding: 0.75rem 1rem; box-sizing: border-box; border-radius: 8px; border: 1px solid var(--border-color);
+            background: rgba(18, 18, 18, 0.7); color: var(--text-primary); font-size: 1rem; transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .form-group input:focus { outline: none; border-color: var(--accent-pink); box-shadow: 0 0 0 3px rgba(216, 27, 96, 0.3); }
+
+        .form-side form { opacity: 0; animation: slideUpFadeIn 0.7s ease-out 0.7s forwards; }
+
+        .btn { display: inline-block; width: 100%; padding: 0.85rem 1.5rem; font-size: 1.1rem; font-weight: 600; text-align: center; text-decoration: none; color: #ffffff; background-color: var(--accent-pink); border: none; border-radius: 8px; cursor: pointer; transition: background-color 0.2s, transform 0.1s; box-sizing: border-box; }
+        .btn:hover { background-color: var(--accent-pink-hover); transform: translateY(-2px); text-decoration: none; color: #ffffff; }
+
+        .alert { padding: 1rem; margin-bottom: 1.5rem; border-radius: 8px; font-weight: 500; border: 1px solid transparent; backdrop-filter: blur(5px); }
+        .alert-danger { color: var(--alert-danger-text); background-color: var(--alert-danger-bg); border-color: #8b3a44; }
+        .alert-success { color: var(--alert-success-text); background-color: var(--alert-success-bg); border-color: #8a3a5f; }
+        .links { margin-top: 1.5rem; text-align: left; opacity: 0; animation: slideUpFadeIn 0.7s ease-out 0.9s forwards; }
+
+        @media (max-width: 800px) {
+            .split-page-container { flex-direction: column; min-height: auto; max-width: 450px; background: transparent; border: none; box-shadow: none; }
+            .branding-side { background: transparent; padding: 2rem 1rem 0 1rem; }
+            .form-side { background: var(--bg-container); backdrop-filter: none; padding: 2rem; border-left: none; border-radius: 12px; }
+            .logo-container-split h1 { font-size: 2.5rem; }
+        }
+
+        .header { position: fixed; top: 0; left: 0; right: 0; background-color: var(--bg-container); color: white; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; z-index: 100; border-bottom: 1px solid var(--border-color); box-shadow: 0 4px 15px rgba(0,0,0,0.4); }
+        .header h1 { margin: 0; font-size: 1.5rem; color: var(--text-primary); }
+        .header a { background-color: #8B0000; color: white; text-decoration: none; padding: 0.5rem 1rem; border-radius: 8px; font-weight: 500; transition: background-color 0.2s; }
+        .header a:hover { background-color: #B22222; text-decoration: none; }
+        body.header-padding { padding-top: 100px; display: block; }
+        body.header-padding .container { margin: 2rem auto; }
+        .container { width: 100%; max-width: 900px; padding: 2.5rem; background: var(--bg-container); border-radius: 12px; box-shadow: 0 10px 40px rgba(0,0,0,0.6); border: 1px solid var(--border-color); box-sizing: border-box; }
+    </style>
+</head>
+<body>
+
+    <main class="split-page-container">
+        
+        <div class="branding-side">
+            <div class="logo-container-split">
+                <svg width="70" height="70" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M25 75 L25 25 L75 75 L75 25" 
+                          stroke="var(--accent-pink)" 
+                          stroke-width="12" 
+                          stroke-linecap="round" 
+                          stroke-linejoin="round"/>
+                </svg>
+                
+                <h1>Neo<span style="color: var(--accent-pink);">Bank</span></h1>
+                <p class="slogan">Um Sistema Bancário Simples</p>
+            </div>
+        </div>
+        
+        <div class="form-side">
+            
+            {% with messages = get_flashed_messages(with_categories=true) %}
+              {% if messages %}
+                {% for category, message in messages %}
+                  <div classs="alert alert-{{ category }}">
+                    {{ message }}
+                  </div>
+                {% endfor %}
+              {% endif %}
+            {% endwith %}
+            <h2>Acesse sua Conta</h2>
+            
+            <form action="/autenticar" method="POST">
+                
+                <div class="form-group">
+                    <label for="usuario">Usuário (CPF ou Conta)</label>
+                    <input type="text" id="usuario" name="usuario" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="senha">Senha</label>
+                    <input type="password" id="senha" name="senha" required>
+                </div>
+                
+                <button type="submit" class="btn">Entrar</button>
+            
+            </form>
+            
+            <div class="links">
+                <a href="/cadastro">Ainda não é cliente? Abra sua conta</a>
+            </div>
+
+        </div>
+
+    </main>
+
+</body>
+</html>

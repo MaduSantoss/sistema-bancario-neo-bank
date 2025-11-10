@@ -60,7 +60,6 @@ Siga os passos abaixo para rodar o NeoBank na sua máquina.
 1.  Clone este repositório:
     ```bash
     git clone https://github.com/MaduSantoss/sistema_bancario-neo_bank.git
-    cd SEU-REPOSITORIO
     ```
 
 2.  (Opcional, mas recomendado) Crie e ative um ambiente virtual:
